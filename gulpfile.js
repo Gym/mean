@@ -9,7 +9,11 @@ var _ = require('lodash'),
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
-  plugins = gulpLoadPlugins(),
+  plugins = gulpLoadPlugins({
+    rename: {
+      'gulp-jscs-stylish': 'jscsStylish'
+    }
+  }),
   path = require('path');
 
 // Set NODE_ENV to 'test'
@@ -38,16 +42,16 @@ gulp.task('nodemon', function () {
 });
 
 // Watch Files For Changes
-gulp.task('watch', function() {
+gulp.task('watch', function () {
   // Start livereload
   plugins.livereload.listen();
 
   // Add watch rules
-  gulp.watch(defaultAssets.server.gulpConfig, ['jshint']);
+  gulp.watch(defaultAssets.server.gulpConfig, ['jshint', 'jscs']);
   gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.server.allJS, ['jshint']).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.server.allJS, ['jshint', 'jscs']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.views).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.js, ['jshint', 'jscs']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed);
@@ -73,6 +77,22 @@ gulp.task('jshint', function () {
     .pipe(plugins.jshint.reporter('fail'));
 });
 
+// JS Code Style task
+gulp.task('jscs', ['jshint'], function () {
+  var assets = _.union(
+    defaultAssets.server.gulpConfig,
+    defaultAssets.server.allJS,
+    defaultAssets.client.js,
+    testAssets.tests.server,
+    testAssets.tests.client,
+    testAssets.tests.e2e
+  );
+
+  gulp.src(assets)
+    .pipe(plugins.jscs())
+    .on('error', plugins.util.noop) // don't stop on error
+    .pipe(plugins.jscsStylish()); // log style errors
+});
 
 // JS minifying task
 gulp.task('uglify', function () {
@@ -120,7 +140,7 @@ gulp.task('mocha', function (done) {
   var error;
 
   // Connect mongoose
-  mongoose.connect(function() {
+  mongoose.connect(function () {
     // Run the tests
     gulp.src(testAssets.tests.server)
       .pipe(plugins.mocha({
@@ -130,9 +150,9 @@ gulp.task('mocha', function (done) {
         // If an error occurs, save it
         error = err;
       })
-      .on('end', function() {
+      .on('end', function () {
         // When the tests are done, disconnect mongoose and pass the error state back to gulp
-        mongoose.disconnect(function() {
+        mongoose.disconnect(function () {
           done(error);
         });
       });
@@ -165,31 +185,31 @@ gulp.task('protractor', function () {
 });
 
 // Lint CSS and JavaScript files.
-gulp.task('lint', function(done) {
-  runSequence('less', 'sass', ['csslint', 'jshint'], done);
+gulp.task('lint', function (done) {
+  runSequence('less', 'sass', ['csslint', 'jshint'], 'jscs', done);
 });
 
 // Lint project files and minify them into two production files.
-gulp.task('build', function(done) {
-  runSequence('env:dev' ,'lint', ['uglify', 'cssmin'], done);
+gulp.task('build', function (done) {
+  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
-gulp.task('test', function(done) {
+gulp.task('test', function (done) {
   runSequence('env:test', ['karma', 'mocha'], done);
 });
 
 // Run the project in development mode
-gulp.task('default', function(done) {
+gulp.task('default', function (done) {
   runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
 });
 
 // Run the project in debug mode
-gulp.task('debug', function(done) {
+gulp.task('debug', function (done) {
   runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
 });
 
 // Run the project in production mode
-gulp.task('prod', function(done) {
+gulp.task('prod', function (done) {
   runSequence('build', 'lint', ['nodemon', 'watch'], done);
 });
