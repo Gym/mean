@@ -205,7 +205,6 @@ describe('Article CRUD tests', function () {
     });
   });
 
-
   it('should be able to get a single article if not signed in', function (done) {
     // Create new article model instance
     var articleObj = new Article(article);

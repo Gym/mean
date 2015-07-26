@@ -87,31 +87,31 @@ describe('User Model Unit Tests:', function () {
       });
     });
 
-    it('should be able to save 2 different users', function(done) {
-      user.remove(function(err) {
+    it('should be able to save 2 different users', function (done) {
+      user.remove(function (err) {
         should.not.exist(err);
-        user.save(function(err) {
-          user3.save(function(err) {
+        user.save(function (err) {
+          user3.save(function (err) {
             should.not.exist(err);
-            user3.remove(function(err) {
+            user3.remove(function (err) {
               should.not.exist(err);
               done();
             });
-            
-          });  
+
+          });
         });
       });
     });
 
-    it('should not be able to save different user with the same email address', function(done) {
-      user.remove(function(err) {
+    it('should not be able to save different user with the same email address', function (done) {
+      user.remove(function (err) {
         should.not.exist(err);
-        user.save(function(err) {
+        user.save(function (err) {
           user3.email = user.email;
-          user3.save(function(err) {
+          user3.save(function (err) {
             should.exist(err);
             done();
-          });  
+          });
         });
       });
 

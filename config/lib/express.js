@@ -182,7 +182,9 @@ module.exports.initModulesServerRoutes = function (app) {
 module.exports.initErrorRoutes = function (app) {
   app.use(function (err, req, res, next) {
     // If the error object doesn't exists
-    if (!err) return next();
+    if (!err) {
+      return next();
+    }
 
     // Log it
     console.error(err.stack);

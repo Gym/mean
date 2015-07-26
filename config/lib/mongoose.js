@@ -31,7 +31,9 @@ module.exports.connect = function (cb) {
       mongoose.set('debug', config.db.debug);
 
       // Call callback FN
-      if (cb) cb(db);
+      if (cb) {
+        cb(db);
+      }
     }
   });
 };

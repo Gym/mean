@@ -20,8 +20,12 @@ exports.userByID = function (req, res, next, id) {
   User.findOne({
     _id: id
   }).exec(function (err, user) {
-    if (err) return next(err);
-    if (!user) return next(new Error('Failed to load User ' + id));
+    if (err) {
+      return next(err);
+    } else if (!user) {
+      return next(new Error('Failed to load User ' + id));
+    }
+
     req.profile = user;
     next();
   });

@@ -11,7 +11,7 @@ module.exports = function (io, socket) {
     username: socket.request.user.username
   });
 
-  // Send a chat messages to all connected sockets when a message is received 
+  // Send a chat messages to all connected sockets when a message is received
   socket.on('chatMessage', function (message) {
     message.type = 'message';
     message.created = Date.now();

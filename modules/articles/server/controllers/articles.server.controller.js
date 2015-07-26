@@ -97,8 +97,9 @@ exports.articleByID = function (req, res, next, id) {
   }
 
   Article.findById(id).populate('user', 'displayName').exec(function (err, article) {
-    if (err) return next(err);
-    if (!article) {
+    if (err) {
+      return next(err);
+    } else if (!article) {
       return res.status(404).send({
         message: 'No article with that identifier has been found'
       });

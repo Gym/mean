@@ -72,8 +72,9 @@ var validateEnvironmentVariable = function () {
  */
 var validateSecureMode = function (config) {
 
-  if (config.secure !== true)
+  if (config.secure !== true) {
     return true;
+  }
 
   var privateKey = fs.existsSync('./config/sslcerts/key.pem');
   var certificate = fs.existsSync('./config/sslcerts/cert.pem');
