@@ -3,19 +3,17 @@
 /**
  * Module dependencies.
  */
-var adminPolicy = require('../policies/admin.server.policies'),
-	admin = require('../controllers/admin.server.controller');
+var admin = require('../controllers/admin.server.controller');
 
-module.exports = function (app) {
+module.exports = function (app, acl) {
 	// Users collection routes
-	app.route('/api/users').all(adminPolicy.isAllowed)
-		.get(admin.list);
+	app.route('/api/users').get(acl.isAllowed, admin.list);
 
 	// Single user routes
-	app.route('/api/users/:userId').all(adminPolicy.isAllowed)
-		.get(admin.read)
-		.put(admin.update)
-		.delete(admin.delete);
+	app.route('/api/users/:userId')
+		.get(acl.isAllowed, admin.read)
+		.put(acl.isAllowed, admin.update)
+		.delete(acl.isAllowed, admin.delete);
 
 	// Finish by binding the user middleware
 	app.param('userId', admin.userByID);

@@ -17,6 +17,7 @@ var config = require('../config'),
 	helmet = require('helmet'),
 	flash = require('connect-flash'),
 	consolidate = require('consolidate'),
+	acl = require('acl'),
 	path = require('path');
 
 /**
@@ -159,20 +160,20 @@ module.exports.initModulesClientRoutes = function (app) {
 /**
  * Configure the modules ACL policies
  */
-module.exports.initModulesServerPolicies = function (app) {
+module.exports.initModulesServerPolicies = function (app, acl) {
 	// Globbing policy files
 	config.files.server.policies.forEach(function (policyPath) {
-		require(path.resolve(policyPath)).invokeRolesPolicies();
+		require(path.resolve(policyPath))(acl);
 	});
 };
 
 /**
  * Configure the modules server routes
  */
-module.exports.initModulesServerRoutes = function (app) {
+module.exports.initModulesServerRoutes = function (app, acl) {
 	// Globbing routing files
 	config.files.server.routes.forEach(function (routePath) {
-		require(path.resolve(routePath))(app);
+		require(path.resolve(routePath))(app, acl);
 	});
 };
 
@@ -208,7 +209,8 @@ module.exports.configureSocketIO = function (app, db) {
  */
 module.exports.init = function (db) {
 	// Initialize express app
-	var app = express();
+	var app = express(),
+		access = new acl(new acl.memoryBackend());
 
 	// Initialize local variables
 	this.initLocalVariables(app);
@@ -232,10 +234,10 @@ module.exports.init = function (db) {
 	this.initModulesClientRoutes(app);
 
 	// Initialize modules server authorization policies
-	this.initModulesServerPolicies(app);
+	this.initModulesServerPolicies(app, access);
 
 	// Initialize modules server routes
-	this.initModulesServerRoutes(app);
+	this.initModulesServerRoutes(app, access);
 
 	// Initialize error routes
 	this.initErrorRoutes(app);
