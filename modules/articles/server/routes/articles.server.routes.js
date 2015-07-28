@@ -16,7 +16,7 @@ module.exports = function (app, acl) {
 		}
 
 		return acl.isAllowed(req, res, next);
-	}
+	};
 
 	// Articles collection routes
 	app.route('/api/articles').all(isAllowed)
