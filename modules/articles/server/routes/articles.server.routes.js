@@ -15,7 +15,7 @@ module.exports = function (app, acl) {
 			return next();
 		}
 
-		acl.isAllowed(req, res, next);
+		return acl.isAllowed(req, res, next);
 	}
 
 	// Articles collection routes
