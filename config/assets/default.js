@@ -22,7 +22,8 @@ module.exports = {
       'modules/*/client/css/*.css'
     ],
     less: [
-      'modules/*/client/less/*.less'
+      'modules/*/client/less/*.less',
+      'themes/maverick/less/styles.less'
     ],
     sass: [
       'modules/*/client/scss/*.scss'

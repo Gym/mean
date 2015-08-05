@@ -1,0 +1,80 @@
+/*!
+ * Maverick (c) by Ndevr Studios and The Red Team
+ * Powered by Bootstrap and FontAwesome
+ */
+
+// Core variables and mixins
+@import "../../../public/lib/bootstrap/less/variables.less";
+@import "variables.less";
+// INCLUDE ALL BOOTSTRAP FILES
+//------------------------------
+@import "../../../public/lib/bootstrap/less/mixins.less";
+@import "extend-mixins.less";
+@import "helpers.less";
+// Reset
+@import "../../../public/lib/bootstrap/less/normalize.less";
+@import "../../../public/lib/bootstrap/less/print.less";
+// Core CSS
+@import "../../../public/lib/bootstrap/less/scaffolding.less";
+@import "../../../public/lib/bootstrap/less/type.less";
+@import "../../../public/lib/bootstrap/less/code.less";
+@import "../../../public/lib/bootstrap/less/grid.less";
+@import "../../../public/lib/bootstrap/less/tables.less";
+@import "../../../public/lib/bootstrap/less/forms.less";
+@import "../../../public/lib/bootstrap/less/buttons.less";
+// Components: common
+@import "../../../public/lib/bootstrap/less/component-animations.less";
+@import "../../../public/lib/bootstrap/less/dropdowns.less";
+@import "../../../public/lib/bootstrap/less/list-group.less";
+@import "../../../public/lib/bootstrap/less/wells.less";
+@import "../../../public/lib/bootstrap/less/close.less";
+// Components: Nav
+@import "../../../public/lib/bootstrap/less/navs.less";
+@import "../../../public/lib/bootstrap/less/button-groups.less";
+@import "../../../public/lib/bootstrap/less/breadcrumbs.less";
+@import "../../../public/lib/bootstrap/less/pagination.less";
+@import "../../../public/lib/bootstrap/less/pager.less";
+// Components: Popovers
+@import "../../../public/lib/bootstrap/less/modals.less";
+@import "../../../public/lib/bootstrap/less/tooltip.less";
+@import "../../../public/lib/bootstrap/less/popovers.less";
+// Components: Misc
+@import "../../../public/lib/bootstrap/less/alerts.less";
+@import "../../../public/lib/bootstrap/less/thumbnails.less";
+@import "../../../public/lib/bootstrap/less/media.less";
+@import "../../../public/lib/bootstrap/less/labels.less";
+@import "../../../public/lib/bootstrap/less/badges.less";
+@import "../../../public/lib/bootstrap/less/progress-bars.less";
+@import "../../../public/lib/bootstrap/less/carousel.less";
+@import "../../../public/lib/bootstrap/less/jumbotron.less";
+@import "../../../public/lib/bootstrap/less/input-groups.less";
+// Utility classes
+@import "../../../public/lib/bootstrap/less/utilities.less"; // Has to be last to override when necessary
+@import "../../../public/lib/bootstrap/less/responsive-utilities.less";
+// EXTEND BOOTSTRAP FILES WITH maverick
+//----------------------------------
+@import "extend-core.less"; //scaffolding, type, code, grid, tables, forms, buttons
+@import "extend-common.less"; //dropdown, list-groups, wells, close
+@import "extend-nav.less"; //navs, button-groups, breadcrumbs, paginations, pager
+@import "extend-popovers.less"; //modals, tooltips, popovers
+@import "extend-misc.less"; //alerts, thumbnails, labels, badges, progressbars, input groups, carousel...
+// Theme Specific
+@import "layout.less"; // Sidebar/Layout of the theme
+@import "topnav.less"; // Topnav
+@import "rightbar.less"; // Rightbar
+@import "leftbar.less"; // Leftbar
+@import "navbar.less"; // Modified navbar of Bootstrap
+@import "panels.less"; // Completely overhauled panels
+@import "panel-widgets.less"; //Custom Panels
+@import "tiles.less"; // Tiles Component
+@import "tabs.less"; // Inline Tabs and Accordions Component
+@import "timeline.less"; // Timeline
+@import "apps.less"; // Custom plugin stylings
+@import "app-inbox.less"; // App Inbox
+@import "loaders.less"; // CSS Loaders
+@import "colorschemes.less"; // Color Schemes
+@import "demo.less"; // Demo specific
+// Other Plugin Files
+//----------------------------------
+@import "../plugins/form-colorpicker/less/bootstrap-colorpicker.less";
+@import "../plugins/form-jasnyupload/fileinput.less";
