@@ -1,9 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-// Configuring the Articles module
-angular.module('articles').run(['Menus',
-  function (Menus) {
-    // Add the articles dropdown item
+  angular
+    .module('articles')
+    .run(menuConfig);
+
+  menuConfig.$inject = ['Menus'];
+
+  function menuConfig (Menus) {
     Menus.addMenuItem('topbar', {
       title: 'Articles',
       state: 'articles',
@@ -24,4 +28,4 @@ angular.module('articles').run(['Menus',
       roles: ['user']
     });
   }
-]);
+})();
