@@ -1,15 +1,14 @@
 (function () {
   'use strict';
-  // Articles Controller Spec
+
   describe('Articles List Controller Tests', function () {
     // Initialize global variables
     var ArticlesListController,
-      scope,
-      rootScope,
+      $scope,
       $httpBackend,
       $state,
       Authentication,
-      Articles,
+      Article,
       mockArticle;
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
@@ -37,19 +36,18 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _Articles_) {
+    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _Article_) {
       // Set a new global scope
-      scope = $rootScope.$new();
-      rootScope = $rootScope;
+      $scope = $rootScope.$new();
 
       // Point global variables to injected services
       $httpBackend = _$httpBackend_;
       $state = _$state_;
       Authentication = _Authentication_;
-      Articles = _Articles_;
+      Article = _Article_;
 
       // create mock article
-      mockArticle = new Articles({
+      mockArticle = new Article({
         _id: '525a8422f6d0f87f0e407a33',
         title: 'An Article about MEAN',
         content: 'MEAN rocks!'
@@ -60,9 +58,9 @@
         roles: ['user']
       };
 
-      // Initialize the Articles controller.
+      // Initialize the Articles List controller.
       ArticlesListController = $controller('ArticlesListController as vm', {
-        $scope: scope
+        $scope: $scope
       });
 
       //Spy on state go
@@ -70,23 +68,23 @@
     }));
 
     describe('Instantiate', function () {
-      var mockArticles;
+      var mockArticleList;
 
       beforeEach(function () {
-        mockArticles = [mockArticle, mockArticle];
+        mockArticleList = [mockArticle, mockArticle];
       });
 
-      it('should send a GET request and return all articles', inject(function (Articles) {
+      it('should send a GET request and return all articles', inject(function (Article) {
         // Set POST response
-        $httpBackend.expectGET('api/articles').respond(mockArticles);
+        $httpBackend.expectGET('api/articles').respond(mockArticleList);
 
 
         $httpBackend.flush();
 
         // Test form inputs are reset
-        expect(scope.vm.articles.length).toEqual(2);
-        expect(scope.vm.articles[0]).toEqual(mockArticle);
-        expect(scope.vm.articles[1]).toEqual(mockArticle);
+        expect($scope.vm.articles.length).toEqual(2);
+        expect($scope.vm.articles[0]).toEqual(mockArticle);
+        expect($scope.vm.articles[1]).toEqual(mockArticle);
 
       }));
     });

@@ -1,16 +1,14 @@
 (function () {
   'use strict';
 
-  // Articles Controller Spec
   describe('Articles Controller Tests', function () {
     // Initialize global variables
     var ArticlesController,
-      scope,
-      rootScope,
+      $scope,
       $httpBackend,
       $state,
       Authentication,
-      Articles,
+      Article,
       mockArticle;
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
@@ -38,19 +36,18 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _Articles_) {
+    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _Article_) {
       // Set a new global scope
-      scope = $rootScope.$new();
-      rootScope = $rootScope;
+      $scope = $rootScope.$new();
 
       // Point global variables to injected services
       $httpBackend = _$httpBackend_;
       $state = _$state_;
       Authentication = _Authentication_;
-      Articles = _Articles_;
+      Article = _Article_;
 
       // create mock article
-      mockArticle = new Articles({
+      mockArticle = new Article({
         _id: '525a8422f6d0f87f0e407a33',
         title: 'An Article about MEAN',
         content: 'MEAN rocks!'
@@ -63,7 +60,7 @@
 
       // Initialize the Articles controller.
       ArticlesController = $controller('ArticlesController as vm', {
-        $scope: scope,
+        $scope: $scope,
         articleResolve: {}
       });
 
@@ -76,74 +73,78 @@
 
       beforeEach(function () {
         // Create a sample article object
-        sampleArticlePostData = new Articles({
+        sampleArticlePostData = new Article({
           title: 'An Article about MEAN',
           content: 'MEAN rocks!'
         });
 
-        scope.vm.article = sampleArticlePostData;
+        $scope.vm.article = sampleArticlePostData;
       });
 
-      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Articles) {
+      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Article) {
         // Set POST response
         $httpBackend.expectPOST('api/articles', sampleArticlePostData).respond(mockArticle);
 
         // Run controller functionality
-        scope.vm.save(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
         // Test URL redirection after the article was created
-        expect($state.go).toHaveBeenCalledWith('articles.view', {articleId: mockArticle._id});
+        expect($state.go).toHaveBeenCalledWith('articles.view', {
+          articleId: mockArticle._id
+        });
       }));
 
-      it('should set scope.vm.error if error', function () {
+      it('should set $scope.vm.error if error', function () {
         var errorMessage = 'this is an error message';
         $httpBackend.expectPOST('api/articles', sampleArticlePostData).respond(400, {
           message: errorMessage
         });
 
-        scope.vm.save(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
-        expect(scope.vm.error).toBe(errorMessage);
+        expect($scope.vm.error).toBe(errorMessage);
       });
     });
 
     describe('vm.save() as update', function () {
       beforeEach(function () {
-        // Mock article in scope
-        scope.vm.article = mockArticle;
+        // Mock article in $scope
+        $scope.vm.article = mockArticle;
       });
 
-      it('should update a valid article', inject(function (Articles) {
+      it('should update a valid article', inject(function (Article) {
         // Set PUT response
         $httpBackend.expectPUT(/api\/articles\/([0-9a-fA-F]{24})$/).respond();
 
         // Run controller functionality
-        scope.vm.save(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
         // Test URL location to new object
-        expect($state.go).toHaveBeenCalledWith('articles.view', {articleId: mockArticle._id});
+        expect($state.go).toHaveBeenCalledWith('articles.view', {
+          articleId: mockArticle._id
+        });
       }));
 
-      it('should set scope.error if error', inject(function (Articles) {
+      it('should set $scope.vm.error if error', inject(function (Article) {
         var errorMessage = 'error';
         $httpBackend.expectPUT(/api\/articles\/([0-9a-fA-F]{24})$/).respond(400, {
           message: errorMessage
         });
 
-        scope.vm.save(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
-        expect(scope.vm.error).toBe(errorMessage);
+        expect($scope.vm.error).toBe(errorMessage);
       }));
     });
 
     describe('vm.remove()', function () {
       beforeEach(function () {
         //Setup articles
-        scope.vm.article = mockArticle;
+        $scope.vm.article = mockArticle;
       });
 
       it('should delete the article and redirect to articles', function () {
@@ -152,7 +153,7 @@
 
         $httpBackend.expectDELETE(/api\/articles\/([0-9a-fA-F]{24})$/).respond(204);
 
-        scope.vm.remove();
+        $scope.vm.remove();
         $httpBackend.flush();
 
         expect($state.go).toHaveBeenCalledWith('articles.list');
@@ -162,7 +163,7 @@
         //Return false on confirm message
         spyOn(window, 'confirm').and.returnValue(false);
 
-        scope.vm.remove();
+        $scope.vm.remove();
 
         expect($state.go).not.toHaveBeenCalled();
       });

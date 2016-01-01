@@ -5,11 +5,11 @@
     .module('articles')
     .controller('ArticlesListController', ArticlesListController);
 
-  ArticlesListController.$inject = ['Articles'];
+  ArticlesListController.$inject = ['Article'];
 
-  function ArticlesListController(Articles) {
+  function ArticlesListController(Article) {
     var vm = this;
 
-    vm.articles = Articles.query();
+    vm.articles = Article.query();
   }
 })();

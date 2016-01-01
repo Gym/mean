@@ -5,13 +5,15 @@
     .module('articles')
     .controller('ArticlesController', ArticlesController);
 
-  ArticlesController.$inject = ['$scope', '$state', 'Authentication', 'articleResolve'];
+  ArticlesController.$inject = ['$scope', '$state', 'articleResolve', 'Authentication'];
 
-  function ArticlesController($scope, $state, Authentication, articleResolve) {
+  function ArticlesController($scope, $state, article, Authentication) {
     var vm = this;
 
-    vm.article = articleResolve;
+    vm.article = article;
     vm.authentication = Authentication;
+    vm.error = null;
+    vm.form = {};
     vm.remove = remove;
     vm.save = save;
 
@@ -24,27 +26,26 @@
 
     // Save Article
     function save(isValid) {
-      var article = vm.article;
-
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.articleForm');
         return false;
       }
 
-      if (article._id) {
-        article.$update(successCallback, errorCallback);
+      // TODO: move create/update logic to service
+      if (vm.article._id) {
+        vm.article.$update(successCallback, errorCallback);
       } else {
-        article.$save(successCallback, errorCallback);
+        vm.article.$save(successCallback, errorCallback);
       }
 
-      function successCallback(response) {
+      function successCallback(res) {
         $state.go('articles.view', {
-          articleId: response._id
+          articleId: res._id
         });
       }
 
-      function errorCallback(errorResponse) {
-        vm.error = errorResponse.data.message;
+      function errorCallback(res) {
+        vm.error = res.data.message;
       }
     }
   }

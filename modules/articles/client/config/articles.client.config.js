@@ -7,7 +7,7 @@
 
   menuConfig.$inject = ['Menus'];
 
-  function menuConfig (Menus) {
+  function menuConfig(Menus) {
     Menus.addMenuItem('topbar', {
       title: 'Articles',
       state: 'articles',
@@ -23,7 +23,7 @@
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'Create Articles',
+      title: 'Create Article',
       state: 'articles.create',
       roles: ['user']
     });

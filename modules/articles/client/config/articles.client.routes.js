@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('articles.routes')
-  .config(routeConfig);
+    .module('articles.routes')
+    .config(routeConfig);
 
   routeConfig.$inject = ['$stateProvider'];
 
@@ -22,14 +22,26 @@
       })
       .state('articles.create', {
         url: '/create',
-        templateUrl: 'modules/articles/client/views/create-article.client.view.html',
+        templateUrl: 'modules/articles/client/views/form-article.client.view.html',
         controller: 'ArticlesController',
         controllerAs: 'vm',
-        data: {
-          roles: ['user', 'admin']
-        },
         resolve: {
           articleResolve: newArticle
+        },
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('articles.edit', {
+        url: '/:articleId/edit',
+        templateUrl: 'modules/articles/client/views/form-article.client.view.html',
+        controller: 'ArticlesController',
+        controllerAs: 'vm',
+        resolve: {
+          articleResolve: getArticle
+        },
+        data: {
+          roles: ['user', 'admin']
         }
       })
       .state('articles.view', {
@@ -38,34 +50,22 @@
         controller: 'ArticlesController',
         controllerAs: 'vm',
         resolve: {
-          articleResolve: findArticle
-        }
-      })
-      .state('articles.edit', {
-        url: '/:articleId/edit',
-        templateUrl: 'modules/articles/client/views/edit-article.client.view.html',
-        controller: 'ArticlesController',
-        controllerAs: 'vm',
-        resolve: {
-          articleResolve: findArticle
-        },
-        data: {
-          roles: ['user', 'admin']
+          articleResolve: getArticle
         }
       });
   }
 
-  findArticle.$inject = ['$stateParams', 'Articles'];
+  getArticle.$inject = ['$stateParams', 'Article'];
 
-  function findArticle($stateParams, Articles) {
-    return Articles.get({
+  function getArticle($stateParams, Article) {
+    return Article.get({
       articleId: $stateParams.articleId
     }).$promise;
   }
 
-  newArticle.$inject = ['Articles'];
+  newArticle.$inject = ['Article'];
 
-  function newArticle(Articles) {
-    return new Articles();
+  function newArticle(Article) {
+    return new Article();
   }
 })();
